@@ -63,6 +63,11 @@ namespace bear { namespace core {
 	
 	// Define some default templates
 	typedef Vector2<int> Vector2i;
+	static bool operator<(const Vector2i& left, const Vector2i& right) {
+		if (right.x > left.x)
+			return true;
+	}
+
 	typedef Vector2<float> Vector2f;
 	typedef Vector2<unsigned int> Vector2ui;
 	typedef Vector2<double> Vector2d;

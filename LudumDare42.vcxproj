@@ -132,9 +132,14 @@
     <ClCompile Include="src\Game.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Chest.h" />
     <ClInclude Include="include\Constants.h" />
+    <ClInclude Include="include\Enemy.h" />
     <ClInclude Include="include\Enum.h" />
     <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\Item.h" />
+    <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\Util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

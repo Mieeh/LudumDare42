@@ -54,6 +54,9 @@ namespace bear { namespace graphics {
 		// Change string literal
 		void setStringLiteral(const std::string& a_StringLiteral);
 
+		// Sets position
+		void setPosition(core::Vector2f a_Position);
+
 	private:
 		std::string m_StringLiteral;
 		core::Vector2f m_Position;

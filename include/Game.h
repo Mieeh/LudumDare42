@@ -1,9 +1,12 @@
 #pragma once
 
+#include<map>
+
 #include<window\window.h>
 using namespace bear::window;
 
 #include<graphics\graphics.h>
+#include<graphics\renderers\batch_renderer.h>
 using namespace bear::graphics;
 
 #include<core\color.h>
@@ -11,6 +14,18 @@ using namespace bear::core;
 
 #include"Constants.h"
 #include"Enum.h"
+#include"Player.h"
+#include"Chest.h"
+#include"Util.h"
+#include"Item.h"
+#include"Enemy.h"
+
+struct map_struct {
+	std::vector<std::vector<int>> tile_list;
+	std::vector<Renderable*> renderable_tile_list; // ground & wall
+	std::map<std::string, Renderable*> prop_tile_list; // Chest
+	std::map<std::string, Enemy> enemy_tile_list; // Enemy 
+};
 
 class Game {
 private:
@@ -18,8 +33,19 @@ private:
 	GAME_STATE game_state;
 	Color clear_color = Color(19/255.0f, 18/255.0f, 14/255.0f);
 
+	map_struct map;
+	BatchRenderer renderer, ui_layer;
+	Player player;
+	Item* item;
+	TextLabel* event_text;
+	TextLabel* event_text_secondary;
+	Font* font;
+	View view;
+
 private:
 	void eventInput(bear::Event &event);
+
+	bool removeFromPropTileList(Vector2i key);
 
 public:
 	Game();
