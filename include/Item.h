@@ -27,23 +27,28 @@ struct Item {
 	const int max_defense_points = 5-1;
 
 	// Methods
-	void setTypeRandom() {
-		int x = rand() % 3;
-		type = static_cast<ITEM_TYPE>(x);
+	void setType(ITEM_TYPE type) {
+		this->type = type;
 		if (type == ITEM_TYPE::DAMAGE) {
 			int rand_index = rand() % weapon_names.size();
-			item_name = weapon_names[rand_index];
-			weapon_value = (rand() % max_weapon_attack) + 1;
+			weapon random_weapon = weapon_names[rand_index];
+
+			item_name = random_weapon.name;
+			weapon_value = random_weapon.damage;
 			armor_value = 0;
 		}
 		else if (type == ITEM_TYPE::DEFENSE) {
 			int rand_index = rand() % armor_names.size();
-			item_name = armor_names[rand_index];
-			armor_value = (rand() % max_defense_points) + 1;
+			armor random_armor = armor_names[rand_index];
+
+			item_name = random_armor.name;
+			armor_value = random_armor.defense;
 			weapon_value = 0;
 		}
 		else if (type == ITEM_TYPE::HEALING) {
 			item_name = "Heart";
+			weapon_value = 0;
+			armor_value = 0;
 		}
 	}
 };

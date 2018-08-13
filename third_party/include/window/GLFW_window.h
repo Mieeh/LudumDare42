@@ -32,6 +32,8 @@ namespace bear { namespace window {
 		const bool isMouseDown(int a_Button) override;
 		const core::Vector2d getMousePosition() override;
 
+		const core::Vector2i getWindowPosition();
+		void setWindowPosition(core::Vector2i& a_WindowPosition);
 		const core::Vector2i getWindowSize();
 		const float getDeltaTime();
 

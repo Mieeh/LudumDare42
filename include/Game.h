@@ -1,6 +1,10 @@
 #pragma once
 
 #include<map>
+#include<array>
+
+#include<sound\sound.h>
+using namespace bear::sound;
 
 #include<window\window.h>
 using namespace bear::window;
@@ -9,6 +13,7 @@ using namespace bear::window;
 #include<graphics\renderers\batch_renderer.h>
 using namespace bear::graphics;
 
+#include<core\clock.h>
 #include<core\color.h>
 using namespace bear::core;
 
@@ -41,11 +46,26 @@ private:
 	TextLabel* event_text_secondary;
 	Font* font;
 	View view;
+	int current_level; 
+
+	float shake_timer;
+	int shake_strength;
+	bool shake_flag;
+	Vector2f origin_pos;
+
+	SoundContext sound_context;
+	SoundSource *bg;
+	std::array<SoundSource*, SFX_COUNT> sfx_list;
+
+	bool game_won = false;
 
 private:
 	void eventInput(bear::Event &event);
 
 	bool removeFromPropTileList(Vector2i key);
+	void clearCurrentMap();
+	void loadNewMap(int index);
+	void startWindowShake(float shake_timer, int shake_strength);
 
 public:
 	Game();
@@ -57,6 +77,9 @@ public:
 	// Core main loop from where we use "game_state"
 	void mainLoop();
 	
+	// Methods for the game states
+	void menuLoop();
+	void deadLoop();
 	// Methods for the playing state
 	void setupPlaying();
 	void gameLoop();

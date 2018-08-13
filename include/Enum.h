@@ -1,6 +1,7 @@
 #pragma once
 
 enum GAME_STATE {
+	MENU,
 	PLAYING,
-	GAME_OVER
+	DEAD
 };

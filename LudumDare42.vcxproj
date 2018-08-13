@@ -87,6 +87,7 @@
     <Link>
       <AdditionalDependencies>core.lib;window.lib;audio.lib;graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\C++\LudumDare42\third_party\lib\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -112,6 +113,7 @@
       <ProgramDatabaseFile />
       <AdditionalDependencies>core.lib;window.lib;audio.lib;graphics.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>D:\C++\LudumDare42\third_party\lib\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <SubSystem>NotSet</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Chest.h" />
+    <ClInclude Include="include\Combat.h" />
     <ClInclude Include="include\Constants.h" />
     <ClInclude Include="include\Enemy.h" />
     <ClInclude Include="include\Enum.h" />
