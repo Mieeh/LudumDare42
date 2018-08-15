@@ -2,6 +2,8 @@
 
 #include<core\vector2.h>
 #include"../include/Combat.h"
+#include"../include/Util.h"
+#include"../include/WorldGenerator.h"
 
 using namespace bear;
 
@@ -316,16 +318,10 @@ bool Game::removeFromPropTileList(Vector2i key)
 void Game::clearCurrentMap()
 {
 	// Clear the tiles (vector of pointers)
-	for (auto it = map.renderable_tile_list.begin(); it != map.renderable_tile_list.end(); it++) {
-		delete *it;
-	}
-	map.renderable_tile_list.clear();
+	clearVectorOfPointers<Renderable>(map.renderable_tile_list);
 
 	// Clear the prop map (map of pointers)
-	for (auto it = map.prop_tile_list.begin(); it != map.prop_tile_list.end(); it++) {
-		delete it->second;
-	}
-	map.prop_tile_list.clear();
+	clearMapOfPointers<std::string, Renderable>(map.prop_tile_list);
 
 	// Enemy map
 	map.enemy_tile_list.clear();
@@ -336,6 +332,7 @@ void Game::clearCurrentMap()
 
 void Game::loadNewMap(int index)
 {
+	// Win condition
 	if (index == 5) {
 		game_won = true;
 		switchGameState(GAME_STATE::MENU);
@@ -346,123 +343,7 @@ void Game::loadNewMap(int index)
 	player.position = Vector2i(2, 1);
 
 	map.tile_list = level_list[index];
-	for (int y = 0; y < map.tile_list.size(); y++) {
-		for (int x = 0; x < map.tile_list.at(y).size(); ++x) {
-			int tileValue = map.tile_list.at(y).at(x);
-			bool placed = false;
-
-			if (tileValue == 0) {
-				map.renderable_tile_list.push_back(new Renderable("assets\\ground.png"));
-				placed = true;
-			}
-			if (tileValue == 1) {
-				map.renderable_tile_list.push_back(new Renderable("assets\\wall.png"));
-				placed = true;
-			}
-			if (tileValue == 8) {
-				map.renderable_tile_list.push_back(new Renderable("assets\\tjol.png"));
-				placed = true;
-			}
-			if (tileValue == 10) {
-				map.renderable_tile_list.push_back(new Renderable("assets\\ladder.png"));
-				placed = true;
-			}
-			if (tileValue == 1+99 || tileValue == 2+99 || tileValue == 3+99) {
-				// Chest insertion here please sir
-				std::string chest_image_path;
-				if (tileValue == 1 + 99) chest_image_path = "assets\\chest_weapon.png";
-		   else if (tileValue == 2 + 99) chest_image_path = "assets\\chest_shield.png";
-		   else if (tileValue == 3 + 99) chest_image_path = "assets\\chest_heart.png";
-				std::string k = positionToStringKey(Vector2i(x, y));
-				map.prop_tile_list.insert(std::pair<std::string, Renderable*>(k, new Renderable(chest_image_path)));
-				map.prop_tile_list[k]->transform().m_Position = core::Vector2f(x, y)*TILE_SIZE;
-				map.prop_tile_list[k]->transform().m_Size = core::Vector2f(1, 1)*TILE_SIZE;
-
-				map.renderable_tile_list.push_back(new Renderable("assets\\ground.png"));
-				placed = true;
-			}
-			if (tileValue == 3) { // bat
-				std::string k = positionToStringKey(Vector2i(x, y));
-
-				// Enemy registered to the map position k
-				map.enemy_tile_list.insert(std::pair<std::string, Enemy>(k, Enemy("Bat", enemy_state::bat_hp, enemy_state::bat_dmg)));
-
-				// Placing the bat as a prop
-				map.prop_tile_list.insert(std::pair<std::string, Renderable*>(k, new Renderable("assets\\bat.png")));
-				map.prop_tile_list[k]->transform().m_Position = core::Vector2f(x, y)*TILE_SIZE;
-				map.prop_tile_list[k]->transform().m_Size = core::Vector2f(1, 1)*TILE_SIZE;
-
-				// Placing the tile
-				map.renderable_tile_list.push_back(new Renderable("assets\\ground.png"));
-				placed = true;
-			}
-			if (tileValue == 4) { // dog
-								  // Placing the dog as a prop
-				std::string k = positionToStringKey(Vector2i(x, y));
-
-				// Enemy registered to the map position k
-				map.enemy_tile_list.insert(std::pair<std::string, Enemy>(k, Enemy("Dog", enemy_state::dog_hp, enemy_state::dog_dmg)));
-
-				map.prop_tile_list.insert(std::pair<std::string, Renderable*>(k, new Renderable("assets\\dog.png")));
-				map.prop_tile_list[k]->transform().m_Position = core::Vector2f(x, y)*TILE_SIZE;
-				map.prop_tile_list[k]->transform().m_Size = core::Vector2f(1, 1)*TILE_SIZE;
-
-				// Placing the tile
-				map.renderable_tile_list.push_back(new Renderable("assets\\ground.png"));
-				placed = true;
-			}
-			if (tileValue == 5) { // eyeball
-								  // Placing the eyeball as a prop
-				std::string k = positionToStringKey(Vector2i(x, y));
-
-				// Enemy registered to the map position k
-				map.enemy_tile_list.insert(std::pair<std::string, Enemy>(k, Enemy("Eyeball", enemy_state::eyeball_hp, enemy_state::eyeball_dmg)));
-
-				map.prop_tile_list.insert(std::pair<std::string, Renderable*>(k, new Renderable("assets\\eyeball.png")));
-				map.prop_tile_list[k]->transform().m_Position = core::Vector2f(x, y)*TILE_SIZE;
-				map.prop_tile_list[k]->transform().m_Size = core::Vector2f(1, 1)*TILE_SIZE;
-
-				// Placing the tile
-				map.renderable_tile_list.push_back(new Renderable("assets\\ground.png"));
-				placed = true;
-			}
-			if (tileValue == 6) { // alien
-								  // Placing the alien as a prop
-				std::string k = positionToStringKey(Vector2i(x, y));
-
-				// Enemy registered to the map position k
-				map.enemy_tile_list.insert(std::pair<std::string, Enemy>(k, Enemy("Alien", enemy_state::alien_hp, enemy_state::alien_dmg)));
-
-				map.prop_tile_list.insert(std::pair<std::string, Renderable*>(k, new Renderable("assets\\alien.png")));
-				map.prop_tile_list[k]->transform().m_Position = core::Vector2f(x, y)*TILE_SIZE;
-				map.prop_tile_list[k]->transform().m_Size = core::Vector2f(1, 1)*TILE_SIZE;
-
-				// Placing the tile
-				map.renderable_tile_list.push_back(new Renderable("assets\\ground.png"));
-				placed = true;
-			}
-			if (tileValue == 7) { // devil
-								  // Placing the devil as a prop
-				std::string k = positionToStringKey(Vector2i(x, y));
-
-				// Enemy registered to the map position k
-				map.enemy_tile_list.insert(std::pair<std::string, Enemy>(k, Enemy("Devil", enemy_state::devil_hp, enemy_state::devil_dmg)));
-
-				map.prop_tile_list.insert(std::pair<std::string, Renderable*>(k, new Renderable("assets\\devil.png")));
-				map.prop_tile_list[k]->transform().m_Position = core::Vector2f(x, y)*TILE_SIZE;
-				map.prop_tile_list[k]->transform().m_Size = core::Vector2f(1, 1)*TILE_SIZE;
-
-				// Placing the tile
-				map.renderable_tile_list.push_back(new Renderable("assets\\ground.png"));
-				placed = true;
-			}
-
-			if (placed) {
-				map.renderable_tile_list.back()->transform().m_Position = core::Vector2f(x, y)*TILE_SIZE;
-				map.renderable_tile_list.back()->transform().m_Size = core::Vector2f(1, 1)*TILE_SIZE;
-			}
-		}
-	}
+	WorldGenerator::GenWorld(map);
 }
 
 void Game::startWindowShake(float shake_timer, int shake_strength)
@@ -538,6 +419,18 @@ void Game::gameLoop()
 	}
 
 	{
+		renderer.begin();
+		// Render
+		renderer.submit(player.sprite);
+		// Render the map tiles 
+		for (auto const&x : map.prop_tile_list)
+			renderer.submit(*x.second);
+		for (int i = 0; i < map.renderable_tile_list.size(); i++)
+			renderer.submit(*map.renderable_tile_list.at(i));
+		renderer.flush(view);
+	}
+
+	{
 		// UI Rendering
 		static TextLabel text("10/10", *font, core::Vector2f(TILE_SIZE, window.getWindowSize().y - 20), core::Color::White());
 		static TextLabel text2("1", *font, core::Vector2f(TILE_SIZE * 3.6f, window.getWindowSize().y - 20), core::Color::White());
@@ -601,18 +494,6 @@ void Game::gameLoop()
 			}
 		}
 		ui_layer.flush();
-	}
-
-	{
-		renderer.begin();
-		// Render
-		renderer.submit(player.sprite);
-		// Render the map tiles 
-		for (auto const&x : map.prop_tile_list)
-			renderer.submit(*x.second);
-		for (int i = 0; i < map.renderable_tile_list.size(); i++)
-			renderer.submit(*map.renderable_tile_list.at(i));
-		renderer.flush(view);
 	}
 
 	//fps++;

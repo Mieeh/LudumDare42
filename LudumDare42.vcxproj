@@ -132,6 +132,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\WorldGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Chest.h" />
@@ -143,6 +144,7 @@
     <ClInclude Include="include\Item.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Util.h" />
+    <ClInclude Include="include\WorldGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
