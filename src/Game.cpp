@@ -167,9 +167,22 @@ void Game::eventInput(bear::Event &event)
 				switchGameState(GAME_STATE::MENU);
 		}
 	}
+
 	if (game_state == GAME_STATE::PLAYING) {
 		// Process player move input
 		if (event.type == EventType::KeyPressed) {
+			if (event.key == Key::M) {
+				static bool bgPlaying = true;
+				if (bgPlaying) {
+					bgPlaying = false;
+					bg->setVolume(0);
+				}
+				else if (!bgPlaying) {
+					bgPlaying = true;
+					bg->setVolume(0.4f);
+				}
+			}
+
 			int newTileValue;
 			core::Vector2i newPos = player.position;
 			if (event.key == Key::D)
@@ -356,8 +369,12 @@ void Game::loadNewMap(int index)
 			}
 			if (tileValue == 1+99 || tileValue == 2+99 || tileValue == 3+99) {
 				// Chest insertion here please sir
+				std::string chest_image_path;
+				if (tileValue == 1 + 99) chest_image_path = "assets\\chest_weapon.png";
+		   else if (tileValue == 2 + 99) chest_image_path = "assets\\chest_shield.png";
+		   else if (tileValue == 3 + 99) chest_image_path = "assets\\chest_heart.png";
 				std::string k = positionToStringKey(Vector2i(x, y));
-				map.prop_tile_list.insert(std::pair<std::string, Renderable*>(k, new Renderable("assets\\chest_closed.png")));
+				map.prop_tile_list.insert(std::pair<std::string, Renderable*>(k, new Renderable(chest_image_path)));
 				map.prop_tile_list[k]->transform().m_Position = core::Vector2f(x, y)*TILE_SIZE;
 				map.prop_tile_list[k]->transform().m_Size = core::Vector2f(1, 1)*TILE_SIZE;
 
@@ -479,6 +496,19 @@ void Game::gameLoop()
 	// Game Logic
 	// Set player position on the map
    	player.sprite.transform().m_Position = core::Vector2f((player.position.x * TILE_SIZE)-player.sprite.transform().m_Size.x*1.25f, (player.position.y * TILE_SIZE)-player.sprite.transform().m_Size.y/1.8f);
+
+	{
+		// Camera position
+		float dt = window.getDeltaTime();
+		if (window.isKeyDown(Key::RIGHT))
+			view.translate(Vector2f(-1, 0)*dt);
+		else if (window.isKeyDown(Key::LEFT))
+			view.translate(Vector2f(1, 0)*dt);
+		else if (window.isKeyDown(Key::UP))
+			view.translate(Vector2f(0, 1)*dt);
+		else if (window.isKeyDown(Key::DOWN))
+			view.translate(Vector2f(0, -1)*dt);
+	}
 
 	// Logic for the camera movement 
 	{
