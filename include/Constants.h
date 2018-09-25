@@ -24,9 +24,9 @@
 #define TILE_SIZE 16*4
 #include<vector>
 
-#define WC 1+99
-#define AC 2+99					
-#define HC 3+99
+#define WC 1  +99
+#define AC 2  +99					
+#define HC 3  +99
 
 static std::vector<std::vector<int>> level1 = 
 {

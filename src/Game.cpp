@@ -77,7 +77,18 @@ void Game::switchGameState(GAME_STATE new_state)
 
 void Game::mainLoop()
 {
+	core::Clock timer;
+	unsigned int fps = 0;
+	timer.start();
+
 	while (window.isOpen()) {
+
+		if (timer.getTicks() >= 1000) {
+			std::cout << "FPS: " << fps << std::endl;
+			fps = 0;
+			timer.reset();
+		}
+
 		window.clear(clear_color);
 
 		for (bear::Event event : window.getRegisteredEvents())
@@ -97,6 +108,8 @@ void Game::mainLoop()
 		}
 
 		window.display();
+
+		fps++;
 	}
 }
 
